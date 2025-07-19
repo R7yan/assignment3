@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Menu</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <style>
+    .card {
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .price {
+      font-weight: bold;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Our Menu</h1>
+    <div class="text-center mb-4">
+      <button class="btn btn-primary mx-2" onclick="filterMenu('all')">All</button>
+      <button class="btn btn-secondary mx-2" onclick="filterMenu('lunch')">Lunch</button>
+      <button class="btn btn-secondary mx-2" onclick="filterMenu('dinner')">Dinner</button>
+    </div>
+    <div class="row" id="menu-container">
+      <!-- Dishes will be shown here -->
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="dishModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body" id="modalBodyContent">
+          <!-- Dish details -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const menuData = {
+      lunch: [
+        {
+          name: "Chicken Shawarma",
+          price: "$7.99",
+          description: "Spiced grilled chicken with special sauce.",
+          image: "https://via.placeholder.com/300x200?text=Shawarma"
+        },
+        {
+          name: "Fattoush Salad",
+          price: "$4.50",
+          description: "Fresh Lebanese salad with crispy bread.",
+          image: "https://via.placeholder.com/300x200?text=Fattoush"
+        }
+      ],
+      dinner: [
+        {
+          name: "Lamb Kebab",
+          price: "$12.99",
+          description: "Grilled lamb kebabs served with rice.",
+          image: "https://via.placeholder.com/300x200?text=Kebab"
+        }
+      ]
+    };
+
+    const container = document.getElementById("menu-container");
+
+    function renderMenu(category) {
+      container.innerHTML = "";
+      if (category === "all") {
+        for (const cat in menuData) {
+          menuData[cat].forEach(dish => addDishCard(dish, cat));
+        }
+      } else {
+        menuData[category].forEach(dish => addDishCard(dish, category));
+      }
+    }
+
+    function addDishCard(dish, category) {
+      const card = document.createElement("div");
+      card.className = `col-md-4 menu-item ${category}`;
+      card.innerHTML = `
+        <div class="card" onclick='showDetails(${JSON.stringify(dish)})'>
+          <img src="${dish.image}" class="card-img-top" alt="${dish.name}">
+          <div class="card-body">
+            <h5 class="card-title">${dish.name}</h5>
+            <p class="card-text">${dish.description}</p>
+            <p class="price">${dish.price}</p>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+
+    function filterMenu(category) {
+      renderMenu(category);
+    }
+
+    function showDetails(dish) {
+      document.getElementById("modalBodyContent").innerHTML = `
+        <h5>${dish.name}</h5>
+        <img src="${dish.image}" class="img-fluid mb-2">
+        <p>${dish.description}</p>
+        <p class="price">${dish.price}</p>
+      `;
+      $('#dishModal').modal('show');
+    }
+
+    // Nothing shows by default
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
